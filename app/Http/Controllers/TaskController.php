@@ -45,7 +45,7 @@ class TaskController extends Controller
 
         $task = Task::create($validated);
 
-        return redirect()->route('projects.show', $request->project)->with('success', 'Task created successfully.');
+        return redirect()->route('projects.show', $project)->with('success', 'Task created successfully.');
     }
 
     /**
@@ -55,15 +55,9 @@ class TaskController extends Controller
     {
         Gate::authorize('view', $task);
 
-        if (now()->greaterThan($task->due_date)) {
+        if (!$task->isEditable()) {
             return redirect()->back()->withErrors([
-                'due_date' => 'You cannot update a task that is already overdue.',
-            ]);
-        }
-
-        if ($task->is_completed) {
-            return redirect()->back()->withErrors([
-                'is_completed' => 'You cannot edit a completed task.',
+                'task' => 'This task is either completed or overdue.',
             ]);
         }
 
@@ -80,15 +74,9 @@ class TaskController extends Controller
     {
         Gate::authorize('update', $task);
 
-        if (now()->greaterThan($task->due_date)) {
+        if (!$task->isEditable()) {
             return redirect()->back()->withErrors([
-                'due_date' => 'You cannot update a task that is already overdue.',
-            ]);
-        }
-
-        if ($task->is_completed) {
-            return redirect()->back()->withErrors([
-                'is_completed' => 'You cannot edit a completed task.',
+                'task' => 'This task is either completed or overdue.',
             ]);
         }
 
@@ -105,15 +93,9 @@ class TaskController extends Controller
     {
         Gate::authorize('update', $task);
 
-        if (now()->greaterThan($task->due_date)) {
+        if (!$task->isEditable()) {
             return redirect()->back()->withErrors([
-                'due_date' => 'You cannot update a task that is already overdue.',
-            ]);
-        }
-
-        if ($task->is_completed) {
-            return redirect()->back()->withErrors([
-                'is_completed' => 'You cannot edit a completed task.',
+                'task' => 'This task is either completed or overdue.',
             ]);
         }
 
@@ -146,15 +128,9 @@ class TaskController extends Controller
     {
         Gate::authorize('update', $task);
 
-        if (now()->greaterThan($task->due_date)) {
+        if (!$task->isEditable()) {
             return redirect()->back()->withErrors([
-                'due_date' => 'You cannot complete a task that is already overdue.',
-            ]);
-        }
-
-        if ($task->is_completed) {
-            return redirect()->back()->withErrors([
-                'is_completed' => 'You cannot edit a completed task.',
+                'task' => 'This task is either completed or overdue.',
             ]);
         }
 

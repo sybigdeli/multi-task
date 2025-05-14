@@ -27,6 +27,10 @@ class Task extends Model
     {
         return $this->belongsTo(Project::class);
     }
+    public function isEditable()
+    {
+        return !$this->is_completed && now()->lessThanOrEqualTo($this->due_date);
+    }
     public function getRouteKeyName()
     {
         return 'slug';
