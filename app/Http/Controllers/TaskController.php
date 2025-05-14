@@ -13,9 +13,31 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request, Project $project)
     {
-        //
+        Gate::authorize('view', $project);
+
+        $query = $project->tasks();
+
+        if ($request->has('is_completed')) {
+            $query->where('is_completed', $request->boolean('is_completed'));
+        }
+
+        if ($request->has('due')) {
+            if ($request->due === 'overdue') {
+                $query->where('due_date', '<', now());
+            } elseif ($request->due === 'upcoming') {
+                $query->where('due_date', '>=', now());
+            }
+        }
+
+        $tasks = $query->latest()->get();
+
+        return inertia('Tasks/Index', [
+            'project' => $project,
+            'tasks' => $tasks,
+            'filters' => $request->only('is_completed', 'due'),
+        ]);
     }
 
     /**

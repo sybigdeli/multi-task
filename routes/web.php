@@ -21,6 +21,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/projects/{project}/change-access-level', [ProjectController::class, 'changeAccessLevel'])
         ->name('projects.changeAccessLevel');
 
+    Route::get('/projects/{project}/tasks', [TaskController::class, 'index'])->name('tasks.index');
+
     Route::get('/projects/{project:slug}/tasks/{task:slug}', [TaskController::class, 'show'])
         ->name('projects.showTask');
 
