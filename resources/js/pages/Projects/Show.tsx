@@ -72,11 +72,19 @@ export default function ShowProject({ project, tasks, userAccessLevel }: React.P
         });
     };
 
-    const handleClickTasks = (isCompleted: boolean, slug: string) => {
+    const handleClickTasks = (dueDate: string, isCompleted: boolean, slug: string) => {
+        const isOverdue = new Date(dueDate) < new Date();
+
+        if (isOverdue) {
+            alert("cannot open overdue task");
+            return;
+        }
+
         if (isCompleted) {
             alert("cannot open completed task");
             return;
         }
+
         router.visit(`/projects/${project.slug}/tasks/${slug}`);
     }
 
@@ -88,7 +96,7 @@ export default function ShowProject({ project, tasks, userAccessLevel }: React.P
                 <div className="w-full flex justify-between items-center gap-2 pb-4">
                     <h1 className="text-2xl font-bold">{project.title}</h1>
 
-                    <span className={`text-sm font-semibold px-2 py-1 rounded-md ${userAccessLevel === 'admin' ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'}`}>
+                    <span className={`text-sm font-semibold px-2 py-1 rounded-md ${userAccessLevel === 'admin' || userAccessLevel === 'owner' ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'}`}>
                         {userAccessLevel}
                     </span>
                 </div>
@@ -192,7 +200,7 @@ export default function ShowProject({ project, tasks, userAccessLevel }: React.P
 
                             return (
                                 <li
-                                    onClick={() => handleClickTasks(task.is_completed, task.slug)}
+                                    onClick={() => handleClickTasks(task.due_date, task.is_completed, task.slug)}
                                     key={task.id}
                                     className="border p-4 rounded-md cursor-pointer hover:bg-neutral-900 transition group"
                                 >
@@ -208,7 +216,7 @@ export default function ShowProject({ project, tasks, userAccessLevel }: React.P
                                         <p className={`text-gray-600 flex-1 ${isOverdue || task.is_completed ? 'line-through text-gray-400' : ''}`}>
                                             {task.description}
                                         </p>
-                                        {isOverdue || task.is_completed && (
+                                        {(isOverdue || task.is_completed) && (
                                             <button
                                                 onClick={(e) => {
                                                     e.stopPropagation();
