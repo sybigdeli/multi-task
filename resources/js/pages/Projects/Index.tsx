@@ -27,7 +27,7 @@ export default function Projects({ projects }: React.PropsWithChildren<{ project
                                     View Project
                                 </Link>
                             </div>
-                        )) : <div className="w-full flex justify-center p-5 flex-col gap-4 items-center">پروژه ای وجود ندارد <Link href="projects/create" className="text-neutral-800 bg-white rounded-md hover:bg-neutral-200 transition px-4 py-2 underline">ساخت اولین پروژه</Link></div>
+                        )) : <div className="w-full flex justify-center p-5 flex-col gap-4 items-center">There is no project!!!<Link href="projects/create" className="text-neutral-800 bg-white rounded-md hover:bg-neutral-200 transition px-4 py-2 underline">Create the first project</Link></div>
                     }
                 </div>
             </section>

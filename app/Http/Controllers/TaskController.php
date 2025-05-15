@@ -60,7 +60,6 @@ class TaskController extends Controller
             'description' => 'required|string',
             'due_date' => 'required|date|after_or_equal:now',
         ]);
-
         $validated['is_completed'] = false;
         $validated['project_id'] = $project->id;
         $validated['slug'] = Str::slug($validated['title']) . '-' . uniqid();

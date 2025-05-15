@@ -7,7 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import {
     Dialog,
-    DialogTrigger,
+DialogTrigger,
     DialogContent,
     DialogHeader,
     DialogTitle,
@@ -24,10 +24,11 @@ import {
     SelectItem,
 } from "@/components/ui/select";
 
-export default function ShowProject({ project, tasks, userAccessLevel }: React.PropsWithChildren<{
+export default function ShowProject({ project, tasks, userAccessLevel, errors}: React.PropsWithChildren<{
     project: { title: string; description: string; slug: string },
     tasks: Array<{ id: number; title: string; description: string; due_date: string, slug: string, is_completed: boolean }>,
     userAccessLevel: string;
+    errors: {title : string , description : string , due_date : string};
 }>) {
     const breadcrumbs = [
         { title: 'Projects', href: '/projects' },
@@ -44,13 +45,15 @@ export default function ShowProject({ project, tasks, userAccessLevel }: React.P
         setData: setTaskData,
         post,
         processing: taskProcessing,
-        errors: taskErrors,
+        // errors,
         reset,
     } = useForm({
         title: '',
         description: '',
         due_date: new Date(),
     });
+    console.log("errors" , errors);
+    
 
     const handleDelete = () => {
         router.delete(`/projects/${project.slug}`, {
@@ -184,12 +187,12 @@ export default function ShowProject({ project, tasks, userAccessLevel }: React.P
                                     <div>
                                         <Label htmlFor="title">Task Title</Label>
                                         <Input id="title" value={taskData.title} onChange={(e) => setTaskData("title", e.target.value)} />
-                                        {taskErrors.title && <div className="text-sm text-red-500">{taskErrors.title}</div>}
+                                        {errors.title && <div className="text-sm text-red-500">{errors.title}</div>}
                                     </div>
                                     <div>
                                         <Label htmlFor="description">Description</Label>
                                         <textarea id="description" value={taskData.description} onChange={(e) => setTaskData("description", e.target.value)} className="w-full p-2 border rounded-md" />
-                                        {taskErrors.description && <div className="text-sm text-red-500">{taskErrors.description}</div>}
+                                        {errors.description && <div className="text-sm text-red-500">{errors.description}</div>}
                                     </div>
                                     <div className="flex flex-col gap-2">
                                         <Label htmlFor="due_date">Due Date & Time</Label>
@@ -202,7 +205,7 @@ export default function ShowProject({ project, tasks, userAccessLevel }: React.P
                                             dateFormat="yyyy-MM-dd HH:mm"
                                             className="w-full p-2 border rounded-md"
                                         />
-                                        {taskErrors.due_date && <div className="text-sm text-red-500">{taskErrors.due_date}</div>}
+                                        {errors.due_date && <div className="text-sm text-red-500">{errors.due_date}</div>}
                                     </div>
                                     <DialogFooter>
                                         <button type="submit" disabled={taskProcessing} className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
